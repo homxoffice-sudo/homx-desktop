@@ -33,20 +33,11 @@ function createWindow() {
     mainWindow.show();
   });
 
-  // Open external links in the default browser, not inside the app
+  // Open new windows (target="_blank") externally, but let all navigation
+  // happen inside the app — including OAuth redirects through external providers.
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-    if (!url.startsWith(APP_URL)) {
-      shell.openExternal(url);
-      return { action: "deny" };
-    }
-    return { action: "allow" };
-  });
-
-  mainWindow.webContents.on("will-navigate", (event, url) => {
-    if (!url.startsWith(APP_URL) && !url.startsWith("about:")) {
-      event.preventDefault();
-      shell.openExternal(url);
-    }
+    shell.openExternal(url);
+    return { action: "deny" };
   });
 }
 
