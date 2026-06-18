@@ -15,12 +15,14 @@
     "appId": "ai.homx.desktop",
     "productName": "Homx",
     "copyright": "© 2026 Homx",
+    "icon": "assets/icon.png",
     "directories": {
       "output": "dist"
     },
     "files": [
       "main.js",
-      "preload.js"
+      "preload.js",
+      "assets/**"
     ],
     "win": {
       "target": [{ "target": "nsis", "arch": ["x64"] }]

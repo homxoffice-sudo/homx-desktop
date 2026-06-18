@@ -15,7 +15,7 @@ function createWindow() {
     minWidth: MIN_WIDTH,
     minHeight: MIN_HEIGHT,
     title: "Homx",
-    icon: path.join(__dirname, "assets", "icon.png"),
+    icon: path.join(__dirname, "assets", "icon.png"), // electron-builder converts PNG → ico/icns automatically
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
