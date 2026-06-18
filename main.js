@@ -83,10 +83,43 @@ function buildMenu() {
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
+function showOfflineDialog() {
+  const { dialog } = require("electron");
+  dialog.showMessageBox(mainWindow, {
+    type: "warning",
+    title: "אין חיבור לאינטרנט",
+    message: "נדרש חיבור לאינטרנט",
+    detail: "Homx דורשת חיבור לאינטרנט כדי לעבוד.\nאנא התחבר לרשת ונסה שנית.",
+    buttons: ["נסה שנית"],
+    defaultId: 0,
+  }).then(() => {
+    if (!require("electron").net.isOnline()) {
+      showOfflineDialog();
+    } else {
+      mainWindow.reload();
+    }
+  });
+}
+
 app.whenReady().then(() => {
   buildMenu();
   createWindow();
   autoUpdater.checkForUpdatesAndNotify();
+
+  const { net } = require("electron");
+
+  // Check on load
+  mainWindow.webContents.on("did-finish-load", () => {
+    if (!net.isOnline()) showOfflineDialog();
+  });
+
+  // Check when OS reports network change
+  require("electron").powerMonitor;
+  setInterval(() => {
+    if (mainWindow && !mainWindow.isDestroyed() && !net.isOnline()) {
+      showOfflineDialog();
+    }
+  }, 5000);
 });
 
 app.on("window-all-closed", () => {
